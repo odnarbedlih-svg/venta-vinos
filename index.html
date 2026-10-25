@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paohil Vinería Artesanal | Tienda Online de Vinos de Autor</title>
+  
+  <!-- Google Fonts para tipografía de lujo y lectura moderna -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Hoja de estilos -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Favicon simbólico -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍷</text></svg>">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       BARRA SUPERIOR INFORMATIVA & AVISO LEGAL COLOMBIANO
+       ========================================================================== -->
+  <div class="top-legal-bar">
+    <div class="legal-text">
+      🍷 <strong>ENVÍOS GRATIS</strong> en pedidos superiores a $150.000 COP | Despachos rápidos a toda Colombia
+    </div>
+    <div class="top-contact">
+      <span>📱 WhatsApp Sommelier: <a href="https://wa.me/573105559876" target="_blank">+57 310 555 9876</a></span>
+      <span>🇨🇴 Tienda 100% Colombiana</span>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       ENCABEZADO PRINCIPAL (HEADER)
+       ========================================================================== -->
+  <header class="main-header">
+    <div class="header-container">
+      
+      <!-- Logotipo de Paohil Vinería Artesanal -->
+      <a href="#" class="brand-logo" onclick="resetFilters(); return false;">
+        <div class="logo-crest">🍷</div>
+        <div class="brand-text">
+          <h1>PAOHIL <span>Vinería</span></h1>
+          <p>Tradición & Vinos Artesanales</p>
+        </div>
+      </a>
+
+      <!-- Buscador en tiempo real de vinos -->
+      <div class="header-search">
+        <div class="search-input-wrapper">
+          <input type="text" id="searchInput" placeholder="Busca tu vino artesanal favorito (Malbec, Syrah, Dulce, etc.)...">
+          <button class="search-btn" title="Buscar vino" onclick="renderProducts()">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Acciones de cabecera: Asesoría y Carrito de compras -->
+      <div class="header-actions">
+        <button class="sommelier-btn" onclick="document.getElementById('sommelierSection').scrollIntoView({behavior: 'smooth'})">
+          <span>✨ Asesor Sommelier</span>
+        </button>
+
+        <button class="cart-button" id="headerCartBtn" title="Ver carrito">
+          <div class="cart-icon-wrapper">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+            <span class="cart-count">0</span>
+          </div>
+          <span>Mi Carrito</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Navegación por categorías de vino -->
+    <nav class="sub-nav">
+      <div class="sub-nav-container">
+        <ul class="nav-links">
+          <li><a href="#catalogoSection" class="active" onclick="filterByCategory('todos')">Todos los Vinos</a></li>
+          <li><a href="#catalogoSection" onclick="filterByCategory('tintos')">Vinos Tintos <span class="nav-badge-pill">Reserva</span></a></li>
+          <li><a href="#catalogoSection" onclick="filterByCategory('blancos')">Vinos Blancos</a></li>
+          <li><a href="#catalogoSection" onclick="filterByCategory('rosados')">Vinos Rosados</a></li>
+          <li><a href="#catalogoSection" onclick="filterByCategory('artesanales')">Especiales & Dulces <span class="nav-badge-pill">Autor</span></a></li>
+          <li><a href="#aboutSection">Nuestra Historia</a></li>
+          <li><a href="#reviewsSection">Opiniones</a></li>
+          <li><a href="https://wa.me/573105559876" target="_blank">Pedir por WhatsApp</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ==========================================================================
+       HERO BANNER PRINCIPAL (INSPIRADO EN LA REFERENCIA CON CERTIFICACIÓN +18)
+       ========================================================================== -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-tag">✨ Selección Especial de Autor Colombiano</div>
+      <h2 class="hero-title">PAOHIL <span>VINERÍA ARTESANAL</span></h2>
+      <p class="hero-subtitle">
+        Los mejores vinos artesanales elaborados con paciencia, cepas seleccionadas y la auténtica pasión de nuestras bodegas. Disfruta aromas inigualables en tu mesa.
+      </p>
+
+      <div class="hero-buttons">
+        <button class="btn-primary" onclick="document.getElementById('catalogoSection').scrollIntoView({behavior: 'smooth'})">
+          <span>Explorar Catálogo</span> 🍷
+        </button>
+        <button class="btn-outline" onclick="document.getElementById('sommelierSection').scrollIntoView({behavior: 'smooth'})">
+          <span>Recomendador de Maridaje</span> ✨
+        </button>
+      </div>
+
+      <!-- Cuadro de Advertencia Legal Colombiana (como en la referencia) -->
+      <div class="hero-legal-box">
+        <div class="brand-reg">PAOHIL VINERÍA ARTESANAL S.A.S. • MARCA REGISTRADA</div>
+        <div class="age-cert">Al ingresar a esta página certifico que soy mayor de edad.</div>
+        <div class="law-warning">El exceso de alcohol es perjudicial para la salud. Ley 30 de 1986. Prohíbase el expendio de bebidas embriagantes a menores de edad.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       LOS 4 BLOQUES DE CONFIANZA (IDÉNTICOS AL ESTILO DE LA FOTO DE REFERENCIA)
+       ========================================================================== -->
+  <section class="trust-features-section">
+    <div class="features-grid">
+      
+      <!-- Tarjeta 1: Envíos -->
+      <div class="feature-card" onclick="showToast('🚚 Despachos diarios a Bogotá, Medellín, Cali, Barranquilla y todo el país.')">
+        <div class="feature-icon-box">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path>
+          </svg>
+        </div>
+        <h3>ENVÍOS A TODA COLOMBIA</h3>
+        <p>Embalaje de máxima protección antichoque para botellas de vidrio en cada despacho.</p>
+      </div>
+
+      <!-- Tarjeta 2: Compra Segura -->
+      <div class="feature-card" onclick="showToast('🔒 Tus pagos y datos están cifrados con certificado SSL de alta seguridad.')">
+        <div class="feature-icon-box">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg>
+        </div>
+        <h3>COMPRA SEGURA</h3>
+        <p>Plataforma certificada con encriptación SSL de 256 bits y protección total al consumidor.</p>
+      </div>
+
+      <!-- Tarjeta 3: Paga Como Quieras -->
+      <div class="feature-card" onclick="showToast('💳 Aceptamos PSE, Nequi, Daviplata, Tarjetas y pago contra entrega.')">
+        <div class="feature-icon-box">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+          </svg>
+        </div>
+        <h3>PAGA COMO QUIERAS</h3>
+        <p>PSE, tarjetas de crédito, débito, Nequi, Daviplata, transferencias o contra entrega.</p>
+      </div>
+
+      <!-- Tarjeta 4: Puntos de Venta & Catas -->
+      <div class="feature-card" onclick="showToast('📍 Conoce nuestras cavas aliadas en Villa de Leyva, Bogotá y Medellín.')">
+        <div class="feature-icon-box">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </div>
+        <h3>PUNTOS DE VENTA</h3>
+        <p>Visita nuestras cavas aliadas y vive experiencias guiadas de cata artesanal.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       ASESOR SOMMELIER INTERACTIVO (MARIDAJE)
+       ========================================================================== -->
+  <section class="sommelier-advisor-section" id="sommelierSection">
+    <div class="advisor-card">
+      <div class="advisor-text">
+        <h2>✨ ¿Qué vas a cenar hoy?</h2>
+        <p>Nuestro sommelier virtual selecciona automáticamente el vino artesanal Paohil perfecto para acompañar tu menú:</p>
+      </div>
+      <div class="advisor-options">
+        <button class="pairing-chip" data-pairing="carnes">🥩 Carnes & Asados</button>
+        <button class="pairing-chip" data-pairing="pastas">🍝 Pastas & Quesos</button>
+        <button class="pairing-chip" data-pairing="pescados">🐟 Pescados & Mariscos</button>
+        <button class="pairing-chip" data-pairing="postres">🍰 Postres & Brindis</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       CATÁLOGO PRINCIPAL DE VINOS
+       ========================================================================== -->
+  <main class="catalog-section" id="catalogoSection">
+    <div class="section-header">
+      <span class="section-subtitle">Nuestra Cava Seleccionada</span>
+      <h2 class="section-title">Vinos Paohil de Edición Limitada</h2>
+    </div>
+
+    <!-- Controles de filtrado y ordenamiento -->
+    <div class="catalog-controls">
+      <div class="category-filters">
+        <button class="filter-btn active" data-category="todos">Todos</button>
+        <button class="filter-btn" data-category="tintos">Vinos Tintos</button>
+        <button class="filter-btn" data-category="blancos">Vinos Blancos</button>
+        <button class="filter-btn" data-category="rosados">Vinos Rosados</button>
+        <button class="filter-btn" data-category="artesanales">Artesanales & Tradición</button>
+      </div>
+
+      <div class="sort-wrapper">
+        <label for="sortSelect">Ordenar por:</label>
+        <select id="sortSelect" class="sort-select">
+          <option value="default">Destacados de la cava</option>
+          <option value="price-asc">Precio: Menor a Mayor</option>
+          <option value="price-desc">Precio: Mayor a Menor</option>
+          <option value="rating">Mejor Calificados ⭐</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Cuadrícula dinámica de productos (manejada por app.js) -->
+    <div class="products-grid" id="productsGrid">
+      <!-- Se llena dinámicamente con JavaScript -->
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       HISTORIA Y FILOSOFÍA ARTESANAL DE PAOHIL
+       ========================================================================== -->
+  <section class="about-section" id="aboutSection">
+    <div class="about-container">
+      <div class="about-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000&auto=format&fit=crop" alt="Cava de barricas Paohil">
+        <div class="about-badge-seal">
+          <span>100%</span>
+          <span>Artesanal</span>
+        </div>
+      </div>
+
+      <div class="about-text">
+        <h2>El Arte de Crear Vinos con Alma y Tradición</h2>
+        <p>
+          En <strong>Paohil Vinería Artesanal</strong> concebimos cada botella como una obra de arte irrepetible. Respetamos los tiempos naturales de maceración y fermentación sin procesos industriales acelerados, logrando perfiles aromáticos puros y taninos aterciopelados.
+        </p>
+        <p>
+          Trabajamos de la mano con viticultores comprometidos con el suelo y el clima de los mejores microterruños colombianos e internacionales, asegurando que cada copa brinde una experiencia memorable.
+        </p>
+
+        <div class="about-highlights">
+          <div class="highlight-item">
+            <div class="highlight-icon">🍇</div>
+            <div>
+              <h4>Cosecha a Mano</h4>
+              <p>Selección racimo a racimo en su punto óptimo.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">🪵</div>
+            <div>
+              <h4>Crianza en Roble</h4>
+              <p>Barricas seleccionadas para aportar suavidad.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">🌱</div>
+            <div>
+              <h4>Producción Sostenible</h4>
+              <p>Compromiso con el cuidado de la tierra.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-icon">🍷</div>
+            <div>
+              <h4>Ediciones Limitadas</h4>
+              <p>Lotes numerados de alta exclusividad.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       RESEÑAS DE CLIENTES REALES (OPINIONES)
+       ========================================================================== -->
+  <section class="reviews-section" id="reviewsSection">
+    <div class="section-header">
+      <span class="section-subtitle">Experiencias Reales</span>
+      <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+    </div>
+
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div>
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">
+            "El Malbec Gran Reserva de Paohil superó todas mis expectativas. Un vino con un cuerpo excelente y notas amaderadas exquisitas. El envío a Bogotá llegó en 24 horas y el empaque muy seguro."
+          </p>
+        </div>
+        <div class="review-author">
+          <div class="review-avatar">CC</div>
+          <div class="review-info">
+            <h4>Camilo Calderón</h4>
+            <span>Bogotá, D.C. • Cliente Verificado</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div>
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">
+            "El Isabella Tradición Dulce me transportó a los sabores auténticos de nuestra tierra. Ideal para compartir en familia los fines de semana. La atención por WhatsApp fue impecable."
+          </p>
+        </div>
+        <div class="review-author">
+          <div class="review-avatar">MV</div>
+          <div class="review-info">
+            <h4>María Fernanda Vargas</h4>
+            <span>Medellín, Antioquia • Cliente Verificado</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div>
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">
+            "Pedí el Sauvignon Blanc y el Rosé Syrah para una cena de aniversario. Ambos llegaron fríos, perfectos y a tiempo en Bucaramanga. ¡Se convirtieron en mi vinería de confianza!"
+          </p>
+        </div>
+        <div class="review-author">
+          <div class="review-avatar">AM</div>
+          <div class="review-info">
+            <h4>Andrés Morales</h4>
+            <span>Bucaramanga, Santander • Cliente Verificado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       BANNER CLUB DE VINOS & NEWSLETTER CON 10% DE DESCUENTO
+       ========================================================================== -->
+  <section class="newsletter-banner">
+    <div class="newsletter-box">
+      <h2>Únete al <span>Club de Amigos Paohil</span></h2>
+      <p>Suscríbete y recibe un <strong>10% de descuento</strong> en tu primer pedido más acceso exclusivo a catas virtuales y cosechas limitadas.</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" id="newsletterEmail" placeholder="Ingresa tu correo electrónico..." required>
+        <button type="submit">Obtener mi 10% OFF</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       PIE DE PÁGINA (FOOTER CON AVISO LEGAL COMPLETO)
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h3>PAOHIL <span>Vinería Artesanal</span></h3>
+        <p>
+          Pasión por la cultura vitivinícola artesanal. Vinos seleccionados de autor, botellas de guarda, reservas especiales y despachos seguros a toda Colombia.
+        </p>
+        <div class="payment-badges">
+          <span>💳 PSE</span>
+          <span>VISA</span>
+          <span>Mastercard</span>
+          <span>Nequi</span>
+          <span>Daviplata</span>
+          <span>Efecty</span>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul class="footer-links">
+          <li><a href="#catalogoSection">Catálogo de Vinos</a></li>
+          <li><a href="#aboutSection">Historia de Paohil</a></li>
+          <li><a href="#sommelierSection">Guía de Maridajes</a></li>
+          <li><a href="#reviewsSection">Opiniones de Clientes</a></li>
+          <li><a href="https://wa.me/573105559876" target="_blank">Atención al Cliente</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Vinos</h4>
+        <ul class="footer-links">
+          <li><a href="#catalogoSection" onclick="filterByCategory('tintos')">Tintos de Barrica</a></li>
+          <li><a href="#catalogoSection" onclick="filterByCategory('blancos')">Blancos Jóvenes</a></li>
+          <li><a href="#catalogoSection" onclick="filterByCategory('rosados')">Rosados Florales</a></li>
+          <li><a href="#catalogoSection" onclick="filterByCategory('artesanales')">Isabella Tradición Dulce</a></li>
+          <li><a href="#catalogoSection" onclick="filterByCategory('artesanales')">Espumosos Método Tradicional</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col contact-info">
+        <h4>Contacto & Despachos</h4>
+        <p>📍 Bodega y Cava Central: Calle 85 # 14-42, Bogotá, Colombia</p>
+        <p>📞 Teléfono: (+57) 601 745 2890</p>
+        <p>📱 WhatsApp Pedidos: (+57) 310 555 9876</p>
+        <p>✉️ Correo: contacto@paohilvineria.com</p>
+        <p>⏰ Lunes a Sábado: 9:00 AM - 8:00 PM</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-legal-notice">
+        ⚠️ EL EXCESO DE ALCOHOL ES PERJUDICIAL PARA LA SALUD. ARTÍCULO 16, LEY 30 DE 1986. PROHÍBASE EL EXPENDIO DE BEBIDAS EMBRIAGANTES A MENORES DE EDAD. LEY 124 DE 1994.
+      </div>
+      <div class="footer-copy">
+        © 2026 Paohil Vinería Artesanal S.A.S. - Todos los derechos reservados. Inspirado en la excelencia de La Vinería Tienda Online.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       CARRITO DESLIZABLE (SLIDE-OVER DRAWER)
+       ========================================================================== -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3>
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+        </svg>
+        <span>Tu Pedido Paohil</span>
+      </h3>
+      <button class="cart-close-btn" id="cartCloseBtn" title="Cerrar carrito">&times;</button>
+    </div>
+
+    <!-- Barra de progreso para envío gratis -->
+    <div class="cart-free-shipping-progress">
+      <span id="shippingProgressText">Envíos GRATIS por compras superiores a $150.000 COP</span>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="shippingProgressBar"></div>
+      </div>
+    </div>
+
+    <!-- Lista de items en el carrito -->
+    <div class="cart-items-list" id="cartItemsList">
+      <!-- Se renderiza con JS -->
+    </div>
+
+    <!-- Resumen y botones de compra -->
+    <div class="cart-footer">
+      <div class="cart-summary-line">
+        <span>Subtotal:</span>
+        <span id="cartSubtotal">$0 COP</span>
+      </div>
+      <div class="cart-summary-line">
+        <span>Costo de Envío:</span>
+        <span id="cartShipping">$0 COP</span>
+      </div>
+      <div class="cart-summary-line total-line">
+        <span>Total:</span>
+        <span id="cartTotal">$0 COP</span>
+      </div>
+
+      <div class="cart-checkout-actions" id="cartCheckoutActions">
+        <button class="btn-whatsapp-checkout" id="btnWhatsAppCheckout">
+          <span>Completar Pedido por WhatsApp</span> 📱
+        </button>
+        <button class="btn-pse-checkout" id="btnPSECheckout">
+          <span>Pagar con PSE / Tarjeta / Nequi</span> 💳
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       MODAL DE CONTROL DE EDAD (COLOMBIAN AGE GATE - LEY 30 DE 1986)
+       ========================================================================== -->
+  <div class="modal-overlay" id="ageGateModal">
+    <div class="modal-window age-gate-window">
+      <div class="crest">🍷</div>
+      <h2>Bienvenido a Paohil Vinería</h2>
+      <p>Para ingresar a nuestra tienda de vinos y licores artesanales debes certificar tu mayoría de edad según la ley colombiana.</p>
+      
+      <div class="age-legal-box">
+        ⚖️ <strong>Artículo 16, Ley 30 de 1986:</strong><br>
+        El exceso de alcohol es perjudicial para la salud. Prohíbase el expendio de bebidas embriagantes a menores de edad.
+      </div>
+
+      <div class="age-actions">
+        <button class="btn-primary" id="btnAgeConfirm">Soy mayor de 18 años</button>
+        <button class="btn-outline" id="btnAgeReject" style="color: var(--wine-dark); border-color: #aaa;">No, salir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DE VISTA RÁPIDA / FICHA DE CATA DEL VINO
+       ========================================================================== -->
+  <div class="modal-overlay" id="quickViewModal">
+    <div class="modal-window quick-view-window">
+      <button class="modal-close-icon" onclick="closeQuickView()">&times;</button>
+      
+      <div class="qv-image">
+        <img id="qvWineImg" src="" alt="Vino seleccionado">
+      </div>
+
+      <div class="qv-details">
+        <span class="qv-origin" id="qvWineOrigin">ORIGEN & CEPA</span>
+        <h3 id="qvWineTitle">Nombre del Vino</h3>
+        <div class="qv-price" id="qvWinePrice">$0 COP</div>
+        <p class="qv-desc" id="qvWineDesc">Descripción del vino artesanal.</p>
+
+        <!-- Notas de cata del Sommelier -->
+        <div class="tasting-notes-grid">
+          <div class="tasting-item">
+            <strong>👁️ Vista:</strong>
+            <span id="qvVista">Rojo rubí</span>
+          </div>
+          <div class="tasting-item">
+            <strong>👃 Nariz:</strong>
+            <span id="qvNariz">Frutos negros</span>
+          </div>
+          <div class="tasting-item">
+            <strong>👅 En Boca:</strong>
+            <span id="qvBoca">Taninos sedosos</span>
+          </div>
+          <div class="tasting-item">
+            <strong>🍽️ Maridaje:</strong>
+            <span id="qvMaridaje">Carnes y pastas</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center; margin-top: 15px;">
+          <input type="number" id="qvQtyInput" value="1" min="1" max="24" style="width: 60px; padding: 10px; text-align: center; border: 1px solid var(--border-color); border-radius: 6px; font-weight: 700;">
+          <button class="btn-primary" id="qvAddCartBtn" style="flex: 1;">Añadir al Carrito 🛒</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DE CHECKOUT PSE / TARJETAS DIRECTO
+       ========================================================================== -->
+  <div class="modal-overlay" id="pseModal">
+    <div class="modal-window" style="padding: 30px;">
+      <button class="modal-close-icon" onclick="closePSEModal()">&times;</button>
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--wine-dark);">Finalizar Compra</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Total a liquidar: <strong id="checkoutTotalDisplay" style="color: var(--primary-burgundy); font-size: 1.1rem;"></strong></p>
+      </div>
+
+      <form onsubmit="processCheckoutForm(event)" style="display: flex; flex-direction: column; gap: 14px;">
+        <div>
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 4px;">Nombre Completo:</label>
+          <input type="text" id="clientName" required placeholder="Ej: Juan Pérez" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; outline: none;">
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 4px;">Ciudad de Entrega:</label>
+          <select id="clientCity" required style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; background: #fff;">
+            <option value="Bogotá D.C.">Bogotá D.C. (Entrega 24 hrs)</option>
+            <option value="Medellín">Medellín (Entrega 24-48 hrs)</option>
+            <option value="Cali">Cali (Entrega 24-48 hrs)</option>
+            <option value="Barranquilla">Barranquilla (Entrega 48 hrs)</option>
+            <option value="Bucaramanga">Bucaramanga (Entrega 24-48 hrs)</option>
+            <option value="Cartagena">Cartagena (Entrega 48 hrs)</option>
+            <option value="Otra Ciudad / Municipio">Otra Ciudad / Municipio de Colombia</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 4px;">Dirección de Entrega:</label>
+          <input type="text" id="clientAddress" required placeholder="Ej: Cra 15 # 93-40 Apto 402" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; outline: none;">
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 4px;">Medio de Pago:</label>
+          <select id="clientPaymentMethod" required style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; background: #fff;">
+            <option value="PSE / Débito Bancario">PSE / Débito Bancario (Cualquier banco)</option>
+            <option value="Nequi / Daviplata">Nequi / Daviplata (Transferencia directa)</option>
+            <option value="Tarjeta de Crédito (Visa / Mastercard)">Tarjeta de Crédito (Visa / Mastercard / Amex)</option>
+            <option value="Pago Contra Entrega">Pago Contra Entrega en Efectivo / Datáfono</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top: 10px; width: 100%; justify-content: center;">
+          Confirmar y Procesar Pedido Seguro 🔒
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DE PEDIDO CONFIRMADO (RECIBO DE COMPRA)
+       ========================================================================== -->
+  <div class="modal-overlay" id="orderSuccessModal">
+    <div class="modal-window" style="padding: 35px 25px; text-align: center;">
+      <div style="width: 60px; height: 60px; background: #e8f8f0; color: #27ae60; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 16px;">
+        ✓
+      </div>
+      <h3 style="font-family: var(--font-serif); font-size: 1.6rem; color: var(--wine-dark); margin-bottom: 8px;">¡Pedido Confirmado con Éxito!</h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">
+        Gracias por tu compra en Paohil Vinería Artesanal. Estamos preparando tus botellas con empaque seguro antichoque.
+      </p>
+
+      <div style="background: var(--bg-parchment); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; text-align: left; font-size: 0.85rem; margin-bottom: 20px;">
+        <div><strong>Número de Pedido:</strong> <span id="successOrderNumber" style="color: var(--primary-burgundy); font-weight: 800;"></span></div>
+        <div style="margin-top: 6px;"><strong>Cliente:</strong> <span id="successClientName"></span></div>
+        <div style="margin-top: 6px;"><strong>Destino:</strong> <span id="successClientCity"></span></div>
+        <div style="margin-top: 6px;"><strong>Forma de Pago:</strong> <span id="successPayment"></span></div>
+      </div>
+
+      <button class="btn-primary" onclick="closeSuccessModal()" style="margin: 0 auto;">
+        Continuar Explorando
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       BOTÓN FLOTANTE DE WHATSAPP (ASESORÍA DIRECTA)
+       ========================================================================== -->
+  <a href="https://wa.me/573105559876?text=Hola%20Paohil%20Vinería%20Artesanal,%20deseo%20asesoría%20sobre%20sus%20vinos" target="_blank" class="floating-whatsapp" title="Hablar con Sommelier por WhatsApp">
+    <div class="whatsapp-tooltip">¿Dudas? Habla con nuestro Sommelier 🍷</div>
+    <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+    </svg>
+  </a>
+
+  <!-- Script interactivo -->
+  <script src="app.js"></script>
+
+  <!-- Función auxiliar para botones de categoría en el menú -->
+  <script>
+    function filterByCategory(cat) {
+      AppState.currentCategory = cat;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-category') === cat);
+      });
+      renderProducts();
+      document.getElementById('catalogoSection').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
