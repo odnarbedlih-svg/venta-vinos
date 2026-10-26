@@ -310,6 +310,10 @@
     <h2>Panel de Administración</h2>
     <p>Paohil Vinería Artesanal — Gestión de Productos</p>
     <input type="password" id="pwdInput" placeholder="Contraseña de acceso" onkeydown="if(event.key==='Enter') doLogin()">
+    <div id="tokenSection" style="display:none;margin-bottom:10px;text-align:left">
+      <p style="font-size:.72rem;color:var(--muted);margin-bottom:6px">🔐 Primera vez: ingresa el token de acceso a GitHub (solo se pide una vez):</p>
+      <input type="password" id="tokenInput" placeholder="Token de GitHub (ghp_...)" style="font-size:.78rem">
+    </div>
     <button class="btn-login" onclick="doLogin()">Entrar al Panel</button>
     <div class="login-err" id="loginErr">❌ Contraseña incorrecta. Inténtalo de nuevo.</div>
   </div>
@@ -504,7 +508,16 @@ let imgFileName = null;
 function doLogin() {
   const pwd = document.getElementById('pwdInput').value;
   if (pwd === CONFIG.password) {
-    CONFIG.ghToken = sessionStorage.getItem('_ght') || '';
+    // Recuperar token guardado o leer del campo
+    let token = localStorage.getItem('_pght');
+    const tokenInput = document.getElementById('tokenInput').value.trim();
+    if (tokenInput) { token = tokenInput; localStorage.setItem('_pght', token); }
+    if (!token) {
+      document.getElementById('tokenSection').style.display = 'block';
+      document.getElementById('tokenInput').focus();
+      return;
+    }
+    CONFIG.ghToken = token;
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
     document.getElementById('loginErr').style.display = 'none';
