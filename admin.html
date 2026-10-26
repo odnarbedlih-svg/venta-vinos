@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin — Paohil Vinería Artesanal</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔑</text></svg>">
+  <style>
+    :root {
+      --wine: #6b1426; --wine-dark: #3b0914; --wine-deep: #1f050d;
+      --gold: #c99738; --gold-light: #f7e7c4; --cream: #fcf9f5;
+      --border: #eedfd2; --text: #1f1d1d; --muted: #6b6262;
+      --green: #27ae60; --red: #e74c3c; --blue: #2980b9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f0ebe3; color: var(--text); min-height: 100vh; }
+
+    /* LOGIN */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--wine-deep), var(--wine));
+    }
+    .login-box {
+      background: white;
+      border-radius: 18px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 400px;
+      border-top: 4px solid var(--gold);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    .login-box .logo { font-size: 3rem; margin-bottom: 10px; }
+    .login-box h2 { font-family: Georgia, serif; font-size: 1.6rem; color: var(--wine-dark); margin-bottom: 6px; }
+    .login-box p { font-size: .82rem; color: var(--muted); margin-bottom: 24px; }
+    .login-box input {
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: .95rem;
+      margin-bottom: 14px; outline: none;
+    }
+    .login-box input:focus { border-color: var(--wine); }
+    .btn-login {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--wine), var(--wine-dark));
+      color: white; border: none; border-radius: 10px;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      transition: all .2s; margin-bottom: 10px;
+    }
+    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(107,20,38,.3); }
+    .login-err { color: var(--red); font-size: .82rem; display: none; margin-top: 6px; }
+
+    /* ADMIN LAYOUT */
+    #adminPanel { display: none; }
+    .admin-header {
+      background: var(--wine);
+      color: white;
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 3px solid var(--gold);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,.25);
+    }
+    .admin-header .brand { display: flex; align-items: center; gap: 12px; }
+    .admin-header h1 { font-family: Georgia, serif; font-size: 1.3rem; }
+    .admin-header h1 span { color: var(--gold-light); font-style: italic; }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+    .btn-view-site {
+      background: var(--gold); color: var(--wine-dark);
+      padding: 8px 18px; border-radius: 20px;
+      font-weight: 700; font-size: .82rem; text-decoration: none;
+      transition: all .2s;
+    }
+    .btn-view-site:hover { background: var(--gold-light); }
+    .btn-logout {
+      background: rgba(255,255,255,.15); color: white;
+      border: 1px solid rgba(255,255,255,.3);
+      padding: 7px 14px; border-radius: 20px;
+      font-size: .78rem; cursor: pointer; font-weight: 600;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,.25); }
+
+    /* MAIN CONTENT */
+    .admin-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* CARDS */
+    .card {
+      background: white;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(107,20,38,.06);
+      overflow: hidden;
+    }
+    .card-head {
+      background: var(--wine-deep);
+      color: white;
+      padding: 14px 20px;
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: .95rem;
+    }
+    .card-head .icon { font-size: 1.2rem; }
+    .card-body { padding: 20px; }
+
+    /* FORM */
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block; font-size: .78rem; font-weight: 700;
+      color: var(--wine-dark); margin-bottom: 5px;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 10px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: .88rem;
+      outline: none; font-family: inherit; background: white;
+      transition: border-color .2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--wine); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* IMAGE UPLOADER */
+    .img-upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+      background: var(--cream);
+    }
+    .img-upload-zone:hover, .img-upload-zone.drag { border-color: var(--wine); background: #fbebee; }
+    .img-upload-zone input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+      border: none; padding: 0;
+    }
+    .img-upload-zone .upload-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .img-upload-zone p { font-size: .82rem; color: var(--muted); }
+    .img-upload-zone strong { color: var(--wine); }
+    #imgPreview {
+      display: none;
+      width: 100%;
+      max-height: 180px;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      margin-top: 12px;
+      background: #f9f4ef;
+    }
+
+    /* BUTTONS */
+    .btn-submit {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--wine), var(--wine-dark));
+      color: white; border: none; border-radius: 10px;
+      font-size: 1rem; font-weight: 800; cursor: pointer;
+      transition: all .25s; margin-top: 6px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(107,20,38,.3); }
+    .btn-submit:disabled { opacity: .55; cursor: not-allowed; }
+    .btn-del {
+      background: #fef2f2; color: var(--red);
+      border: 1px solid #fecaca;
+      padding: 5px 12px; border-radius: 6px;
+      font-size: .75rem; font-weight: 700; cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-del:hover { background: var(--red); color: white; }
+
+    /* STATUS BAR */
+    #statusBar {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: .85rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+    #statusBar.info { background: #dbeafe; color: #1e40af; display: flex; }
+    #statusBar.success { background: #d1fae5; color: #065f46; display: flex; }
+    #statusBar.error { background: #fee2e2; color: #991b1b; display: flex; }
+
+    /* PRODUCTS LIST */
+    .prod-list { display: flex; flex-direction: column; gap: 12px; }
+    .prod-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 14px;
+      background: white; border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: all .2s;
+    }
+    .prod-item:hover { border-color: rgba(201,151,56,.5); box-shadow: 0 3px 10px rgba(107,20,38,.07); }
+    .prod-thumb {
+      width: 58px; height: 66px;
+      border-radius: 7px;
+      background: var(--cream);
+      object-fit: contain;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .prod-info { flex: 1; min-width: 0; }
+    .prod-name { font-size: .88rem; font-weight: 700; color: var(--wine-dark); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .prod-meta { font-size: .73rem; color: var(--muted); }
+    .prod-price { font-size: .88rem; font-weight: 800; color: var(--wine); white-space: nowrap; }
+    .prod-cat-badge {
+      font-size: .65rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px;
+      text-transform: uppercase; letter-spacing: .4px;
+    }
+    .cat-tintos { background: #fee2e2; color: #991b1b; }
+    .cat-blancos { background: #fefce8; color: #854d0e; }
+    .cat-rosados { background: #fce7f3; color: #9d174d; }
+    .cat-accesorios { background: #dbeafe; color: #1e40af; }
+
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 18px; }
+    .stat-box {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-box .num { font-size: 1.6rem; font-weight: 800; color: var(--wine); line-height: 1; }
+    .stat-box .lbl { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-top: 3px; }
+
+    /* SHARE LINK */
+    .share-box {
+      background: linear-gradient(135deg, var(--wine), var(--wine-dark));
+      color: white;
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+    .share-box h4 { font-size: .9rem; font-weight: 700; margin-bottom: 8px; color: var(--gold-light); }
+    .share-url {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: .78rem;
+      font-family: monospace;
+      color: white;
+      word-break: break-all;
+      margin-bottom: 10px;
+    }
+    .share-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .share-btn {
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: .75rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all .2s;
+    }
+    .btn-copy { background: var(--gold); color: var(--wine-dark); }
+    .btn-wa-share { background: #25D366; color: white; }
+    .btn-open { background: rgba(255,255,255,.15); color: white; border: 1px solid rgba(255,255,255,.3); }
+    .btn-copy:hover { background: var(--gold-light); }
+
+    /* LOADING SPINNER */
+    .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* PROGRESS */
+    .upload-progress { margin-top: 10px; display: none; }
+    .progress-bar { height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--wine)); border-radius: 3px; transition: width .3s ease; }
+    .progress-label { font-size: .73rem; color: var(--muted); margin-top: 4px; text-align: center; }
+
+    @media (max-width: 768px) {
+      .admin-body { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================ LOGIN ============================================================ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="logo">🔑</div>
+    <h2>Panel de Administración</h2>
+    <p>Paohil Vinería Artesanal — Gestión de Productos</p>
+    <input type="password" id="pwdInput" placeholder="Contraseña de acceso" onkeydown="if(event.key==='Enter') doLogin()">
+    <button class="btn-login" onclick="doLogin()">Entrar al Panel</button>
+    <div class="login-err" id="loginErr">❌ Contraseña incorrecta. Inténtalo de nuevo.</div>
+  </div>
+</div>
+
+<!-- ============================================================ ADMIN PANEL ============================================================ -->
+<div id="adminPanel">
+
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="brand">
+      <span style="font-size:1.6rem">🍷</span>
+      <h1>PAOHIL <span>Admin</span></h1>
+    </div>
+    <div class="header-actions">
+      <a href="https://odnarbedlih-svg.github.io/venta-vinos/" target="_blank" class="btn-view-site">👁️ Ver Tienda en Vivo</a>
+      <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- ===== COLUMNA IZQUIERDA: FORMULARIO ===== -->
+    <div style="display:flex;flex-direction:column;gap:20px">
+
+      <!-- Compartir Tienda -->
+      <div class="share-box">
+        <h4>🌐 Link de tu Tienda para Compartir</h4>
+        <div class="share-url">https://odnarbedlih-svg.github.io/venta-vinos/</div>
+        <div class="share-btns">
+          <button class="share-btn btn-copy" onclick="copyLink()">📋 Copiar Link</button>
+          <button class="share-btn btn-wa-share" onclick="shareWA()">📱 Enviar por WhatsApp</button>
+          <button class="share-btn btn-open" onclick="window.open('https://odnarbedlih-svg.github.io/venta-vinos/','_blank')">🔗 Abrir</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="card">
+        <div class="card-head"><span class="icon">📊</span> Resumen de la Tienda</div>
+        <div class="card-body">
+          <div class="stats-grid">
+            <div class="stat-box"><div class="num" id="statTotal">0</div><div class="lbl">Productos</div></div>
+            <div class="stat-box"><div class="num" id="statVinos">0</div><div class="lbl">Vinos</div></div>
+            <div class="stat-box"><div class="num" id="statAccesorios">0</div><div class="lbl">Accesorios</div></div>
+            <div class="stat-box"><div class="num" id="statPending">0</div><div class="lbl">Pendientes</div></div>
+          </div>
+          <a href="https://odnarbedlih-svg.github.io/venta-vinos/" target="_blank" style="display:block;text-align:center;font-size:.78rem;color:var(--wine);font-weight:700;">
+            ↗ Ver tienda completa en vivo
+          </a>
+        </div>
+      </div>
+
+      <!-- Formulario Agregar Producto -->
+      <div class="card">
+        <div class="card-head"><span class="icon">➕</span> Agregar Nuevo Producto</div>
+        <div class="card-body">
+
+          <div id="statusBar"></div>
+
+          <!-- Imagen del producto -->
+          <div class="form-group">
+            <label>📷 Foto del Producto</label>
+            <div class="img-upload-zone" id="dropZone" ondragover="onDrag(event,true)" ondragleave="onDrag(event,false)" ondrop="onDrop(event)">
+              <input type="file" id="imgFile" accept="image/*" onchange="onFileSelect(this)">
+              <div class="upload-icon">📸</div>
+              <p><strong>Haz clic o arrastra la foto aquí</strong></p>
+              <p>JPG, PNG o WEBP — Máximo 5 MB</p>
+            </div>
+            <img id="imgPreview" alt="Vista previa del producto">
+            <div class="upload-progress" id="uploadProgress">
+              <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+              <div class="progress-label" id="progressLabel">Preparando imagen...</div>
+            </div>
+          </div>
+
+          <!-- Nombre -->
+          <div class="form-group">
+            <label>📝 Nombre del Producto</label>
+            <input type="text" id="fProdName" placeholder="Ej: Mantilla Cabernet Reserva" required>
+          </div>
+
+          <!-- Categoría y Precio -->
+          <div class="form-row">
+            <div class="form-group">
+              <label>🗂️ Categoría</label>
+              <select id="fCat">
+                <option value="tintos">🍷 Vinos Tintos</option>
+                <option value="blancos">🥂 Vinos Blancos</option>
+                <option value="rosados">🌸 Vinos Rosados</option>
+                <option value="accesorios">🎁 Accesorios</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>🏷️ Etiqueta (badge)</label>
+              <input type="text" id="fBadge" placeholder="Ej: Nuevo, Oferta, Premium">
+            </div>
+          </div>
+
+          <!-- Precio -->
+          <div class="form-row">
+            <div class="form-group">
+              <label>💰 Precio COP</label>
+              <input type="number" id="fPrice" placeholder="Ej: 65000" min="1000">
+            </div>
+            <div class="form-group">
+              <label>💲 Precio Anterior COP</label>
+              <input type="number" id="fOldPrice" placeholder="Ej: 80000 (opcional)">
+            </div>
+          </div>
+
+          <!-- Origen / Especificaciones -->
+          <div class="form-group">
+            <label>📍 Origen / Especificaciones</label>
+            <input type="text" id="fOrigin" placeholder="Ej: Valle de Leyva · 13.5% Vol.">
+          </div>
+
+          <!-- Descripción -->
+          <div class="form-group">
+            <label>📖 Descripción del Producto</label>
+            <textarea id="fDesc" placeholder="Describe el vino o accesorio: aromas, características, materiales, usos..."></textarea>
+          </div>
+
+          <!-- Maridaje -->
+          <div class="form-group">
+            <label>🍽️ Maridaje Recomendado</label>
+            <select id="fPairing">
+              <option value="">— Sin maridaje (accesorios) —</option>
+              <option value="carnes">🥩 Carnes y Asados</option>
+              <option value="pastas">🍝 Pastas y Quesos</option>
+              <option value="pescados">🐟 Pescados y Mariscos</option>
+              <option value="postres">🍰 Postres y Dulces</option>
+            </select>
+          </div>
+
+          <button class="btn-submit" id="btnSubmit" onclick="submitProduct()">
+            <span id="btnLabel">➕ Agregar Producto a la Tienda</span>
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COLUMNA DERECHA: LISTA DE PRODUCTOS ===== -->
+    <div class="card">
+      <div class="card-head">
+        <span class="icon">📦</span>
+        <span>Productos en la Tienda</span>
+        <span style="margin-left:auto;background:rgba(255,255,255,.15);padding:3px 10px;border-radius:10px;font-size:.78rem" id="prodCountBadge">0 productos</span>
+      </div>
+      <div class="card-body" style="max-height:75vh;overflow-y:auto">
+
+        <!-- Filtros rápidos -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+          <button onclick="filterList('todos',this)" class="share-btn btn-copy" style="font-size:.72rem;padding:5px 12px">Todos</button>
+          <button onclick="filterList('tintos',this)" class="share-btn btn-open" style="font-size:.72rem;padding:5px 12px">Tintos</button>
+          <button onclick="filterList('blancos',this)" class="share-btn btn-open" style="font-size:.72rem;padding:5px 12px">Blancos</button>
+          <button onclick="filterList('rosados',this)" class="share-btn btn-open" style="font-size:.72rem;padding:5px 12px">Rosados</button>
+          <button onclick="filterList('accesorios',this)" class="share-btn btn-open" style="font-size:.72rem;padding:5px 12px">Accesorios</button>
+        </div>
+
+        <div class="prod-list" id="productsList"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIGURACIÓN
+============================================================ */
+const CONFIG = {
+  password: 'paohil2026',   // ← Contraseña del panel admin
+  ghToken: '',              // Se ingresa al iniciar sesión
+  ghRepo: 'odnarbedlih-svg/venta-vinos',
+  ghBranch: 'main',
+  storeURL: 'https://odnarbedlih-svg.github.io/venta-vinos/',
+  productsFile: 'products.json'
+};
+
+/* ============================================================
+   DATOS DE PRODUCTOS (se cargan desde products.json)
+============================================================ */
+let PRODUCTS = [];
+let currentFilter = 'todos';
+let imgBase64 = null;
+let imgFileName = null;
+
+/* ============================================================
+   LOGIN / LOGOUT
+============================================================ */
+function doLogin() {
+  const pwd = document.getElementById('pwdInput').value;
+  if (pwd === CONFIG.password) {
+    CONFIG.ghToken = sessionStorage.getItem('_ght') || '';
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    document.getElementById('loginErr').style.display = 'none';
+    loadProducts();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('pwdInput').focus();
+  }
+}
+
+function logout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('pwdInput').value = '';
+}
+
+/* ============================================================
+   CARGAR PRODUCTOS DESDE GITHUB
+============================================================ */
+async function loadProducts() {
+  try {
+    const resp = await fetch(`https://raw.githubusercontent.com/${CONFIG.ghRepo}/${CONFIG.ghBranch}/${CONFIG.productsFile}?ts=${Date.now()}`);
+    if (resp.ok) {
+      PRODUCTS = await resp.json();
+    } else {
+      // Si no existe products.json, usar lista por defecto
+      PRODUCTS = getDefaultProducts();
+    }
+  } catch (e) {
+    PRODUCTS = getDefaultProducts();
+  }
+  renderList();
+  updateStats();
+}
+
+function getDefaultProducts() {
+  return [
+    { id:'v1', name:'Mantilla Vino Artesanal Tinto', cat:'tintos', price:45000, oldPrice:52000, badge:'Artesanal', img:'images/vino_mantilla.jpg', origin:'Vino Artesanal Colombiano · 13% Vol.', pairing:'carnes', specs:['13% Vol.','750 ml','Servir 16°C'], desc:'Vino tinto artesanal Mantilla elaborado con uvas criollas seleccionadas.' },
+    { id:'v2', name:'Paohil Gran Reserva Malbec', cat:'tintos', price:68000, oldPrice:78000, badge:'Más Vendido', img:'https://images.unsplash.com/photo-1558001373-7b93ee48ffa0?q=80&w=600', origin:'Valle de Leyva, Colombia · 13.8% Vol.', pairing:'carnes', specs:['13.8% Vol.','750 ml','12 meses roble'], desc:'Vino tinto de guarda con 12 meses en barrica de roble francés.' },
+    { id:'v3', name:'Paohil Sauvignon Blanc Floral', cat:'blancos', price:55000, oldPrice:65000, badge:'Refrescante', img:'https://images.unsplash.com/photo-1569919659476-f0852f6834b7?q=80&w=600', origin:'Boyacá, Colombia · 12.5% Vol.', pairing:'pescados', specs:['12.5% Vol.','750 ml','Servir 8°C'], desc:'Blanco joven y expresivo con notas de maracuyá, lima y manzana verde.' },
+    { id:'v4', name:'Paohil Rosé Syrah Silvestre', cat:'rosados', price:52000, oldPrice:60000, badge:'Favorito', img:'https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=80&w=600', origin:'Villa de Leyva, Colombia · 12% Vol.', pairing:'pastas', specs:['12% Vol.','750 ml'], desc:'Rosado provenzal con perfume a fresas silvestres.' },
+    { id:'a1', name:'Kit Accesorios Premium 4 piezas', cat:'accesorios', price:38000, oldPrice:49000, badge:'Oferta', img:'images/kit_accesorios.jpg', origin:'Acero Inoxidable · Set Completo', pairing:null, specs:['Sacacorchos','Tapón','Vertedor','Anillo'], desc:'Set de 4 accesorios en caja roja de regalo.' },
+    { id:'a2', name:'Marcadores de Copa Figuras de Silicona', cat:'accesorios', price:28000, oldPrice:35000, badge:'Divertido', img:'images/marcadores_copa.jpg', origin:'Silicona Premium · 8 colores', pairing:null, specs:['8 figuras','Silicona','Lavables'], desc:'Set de 8 marcadores de copa coloridos para identificar copas.' },
+    { id:'a3', name:'Set Eléctrico Cliton Electric Wine Set', cat:'accesorios', price:85000, oldPrice:110000, badge:'Premium', img:'images/electric_cliton.png', origin:'Cliton · Battery Operated', pairing:null, specs:['Abridor eléctrico','Vertedor','Tapón','Cortador'], desc:'Abridor eléctrico automático con 4 accesorios incluidos.' },
+    { id:'a4', name:'Porta-Botellas Hierro Plateado Figura', cat:'accesorios', price:55000, oldPrice:70000, badge:'Decoración', img:'images/portabotellas_hierro.jpg', origin:'Hierro · Color Plateado', pairing:null, specs:['Material: Hierro','Color: Plateado'], desc:'Porta-botellas en forma de figura humana estilizada.' },
+    { id:'a5', name:'Porta-Botellas Bicicleta Vintage Antiguo', cat:'accesorios', price:62000, oldPrice:79000, badge:'Vintage', img:'images/portabotellas_bicicleta.jpg', origin:'Hierro Forjado · Negro · Antiguo', pairing:null, specs:['Material: Hierro','Color: Negro'], desc:'Porta-botellas vintage en forma de bicicleta de tres ruedas.' },
+    { id:'a6', name:'Porta-Botellas Pantera Geométrica Negro', cat:'accesorios', price:68000, oldPrice:85000, badge:'Diseño Exclusivo', img:'images/portabotellas_pantera.jpg', origin:'Resina Premium · Negro · Geométrico', pairing:null, specs:['Material: Resina','Color: Negro'], desc:'Porta-botellas de pantera geométrica low-poly en resina negra.' }
+  ];
+}
+
+/* ============================================================
+   IMAGEN: SELECCIÓN, DRAG, PREVIEW
+============================================================ */
+function onDrag(e, on) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.toggle('drag', on);
+}
+
+function onDrop(e) {
+  e.preventDefault();
+  onDrag(e, false);
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) processFile(file);
+}
+
+function onFileSelect(input) {
+  if (input.files[0]) processFile(input.files[0]);
+}
+
+function processFile(file) {
+  if (file.size > 5 * 1024 * 1024) {
+    showStatus('error', '❌ La imagen es muy grande. Máximo 5 MB.');
+    return;
+  }
+  imgFileName = 'images/' + Date.now() + '_' + file.name.replace(/\s+/g,'_').toLowerCase();
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imgBase64 = e.target.result;
+    document.getElementById('imgPreview').src = imgBase64;
+    document.getElementById('imgPreview').style.display = 'block';
+    showStatus('info', '✅ Imagen cargada. Completa el formulario y presiona "Agregar".');
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ============================================================
+   SUBIR PRODUCTO
+============================================================ */
+async function submitProduct() {
+  const name = document.getElementById('fProdName').value.trim();
+  const cat = document.getElementById('fCat').value;
+  const price = parseInt(document.getElementById('fPrice').value);
+  const oldPrice = parseInt(document.getElementById('fOldPrice').value) || null;
+  const badge = document.getElementById('fBadge').value.trim() || 'Nuevo';
+  const origin = document.getElementById('fOrigin').value.trim();
+  const desc = document.getElementById('fDesc').value.trim();
+  const pairing = document.getElementById('fPairing').value || null;
+
+  if (!name || !price) { showStatus('error', '❌ El nombre y el precio son obligatorios.'); return; }
+  if (!imgBase64 && !imgFileName) { showStatus('error', '❌ Debes seleccionar una foto del producto.'); return; }
+
+  setLoading(true);
+
+  try {
+    let finalImgPath = imgFileName;
+
+    // 1. Subir imagen a GitHub si hay una nueva
+    if (imgBase64 && imgFileName) {
+      showStatus('info', '📤 Subiendo imagen a GitHub...');
+      setProgress(30, 'Subiendo imagen...');
+
+      const imgContent = imgBase64.split(',')[1]; // quitar el "data:image/...;base64,"
+      const uploadOk = await githubUploadFile(imgFileName, imgContent, `Imagen: ${name}`);
+      if (!uploadOk) throw new Error('No se pudo subir la imagen.');
+      setProgress(60, 'Imagen subida. Actualizando catálogo...');
+    }
+
+    // 2. Crear nuevo producto
+    const newProduct = {
+      id: 'p_' + Date.now(),
+      name, cat, price, oldPrice, badge,
+      img: finalImgPath || 'images/vino_mantilla.jpg',
+      origin: origin || cat,
+      pairing: pairing || null,
+      specs: [origin].filter(Boolean),
+      desc: desc || name,
+      badgeType: cat === 'accesorios' ? 'badge-gold' : 'badge-wine',
+      tasting: {
+        vista: 'Ver descripción del producto.',
+        nariz: desc || name,
+        boca: 'Consultar con nuestro sommelier.',
+        maridaje: pairing ? `Ideal para ${pairing}` : 'Consultar disponibilidad.'
+      }
+    };
+
+    // 3. Agregar al array y guardar products.json en GitHub
+    PRODUCTS.push(newProduct);
+    setProgress(80, 'Actualizando catálogo de productos...');
+    showStatus('info', '📝 Actualizando catálogo en GitHub...');
+
+    const saveOk = await saveProductsToGithub();
+    if (!saveOk) throw new Error('No se pudo actualizar el catálogo.');
+
+    setProgress(100, '¡Listo!');
+    showStatus('success', `✅ ¡${name} agregado exitosamente! Aparecerá en la tienda en 1-2 minutos.`);
+    resetForm();
+    renderList();
+    updateStats();
+
+  } catch (err) {
+    showStatus('error', `❌ Error: ${err.message}`);
+    console.error(err);
+  } finally {
+    setLoading(false);
+    setTimeout(() => { document.getElementById('uploadProgress').style.display = 'none'; }, 2000);
+  }
+}
+
+/* ============================================================
+   GITHUB API: SUBIR ARCHIVO
+============================================================ */
+async function githubUploadFile(path, base64Content, message) {
+  try {
+    // Verificar si el archivo ya existe (para obtener SHA)
+    let sha = null;
+    try {
+      const checkResp = await fetch(`https://api.github.com/repos/${CONFIG.ghRepo}/contents/${path}`, {
+        headers: { 'Authorization': `Bearer ${CONFIG.ghToken}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (checkResp.ok) {
+        const data = await checkResp.json();
+        sha = data.sha;
+      }
+    } catch {}
+
+    const body = {
+      message,
+      content: base64Content,
+      branch: CONFIG.ghBranch
+    };
+    if (sha) body.sha = sha;
+
+    const resp = await fetch(`https://api.github.com/repos/${CONFIG.ghRepo}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${CONFIG.ghToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify(body)
+    });
+    return resp.ok;
+  } catch (e) {
+    console.error('githubUploadFile error:', e);
+    return false;
+  }
+}
+
+/* ============================================================
+   GITHUB API: GUARDAR products.json
+============================================================ */
+async function saveProductsToGithub() {
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(PRODUCTS, null, 2))));
+  return await githubUploadFile(CONFIG.productsFile, content, `Actualizar catálogo: ${PRODUCTS.length} productos`);
+}
+
+/* ============================================================
+   ELIMINAR PRODUCTO
+============================================================ */
+async function deleteProduct(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`¿Eliminar "${p.name}" de la tienda?`)) return;
+
+  PRODUCTS = PRODUCTS.filter(x => x.id !== id);
+  const ok = await saveProductsToGithub();
+  if (ok) {
+    showStatus('success', `🗑️ "${p.name}" eliminado de la tienda.`);
+    renderList();
+    updateStats();
+  } else {
+    PRODUCTS.push(p); // revertir
+    showStatus('error', '❌ No se pudo eliminar. Intenta de nuevo.');
+  }
+}
+
+/* ============================================================
+   RENDERIZAR LISTA DE PRODUCTOS
+============================================================ */
+function renderList() {
+  const list = document.getElementById('productsList');
+  const filtered = currentFilter === 'todos' ? PRODUCTS : PRODUCTS.filter(p => p.cat === currentFilter);
+
+  if (!filtered.length) {
+    list.innerHTML = '<p style="text-align:center;color:var(--muted);padding:30px;font-size:.85rem">No hay productos en esta categoría.</p>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(p => `
+    <div class="prod-item">
+      <img class="prod-thumb" src="${p.img}" alt="${p.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2280%22%3E🍷%3C/text%3E%3C/svg%3E'">
+      <div class="prod-info">
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-meta">
+          <span class="prod-cat-badge cat-${p.cat}">${p.cat}</span>
+          &nbsp;${p.origin || ''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <div class="prod-price">$${(p.price||0).toLocaleString('es-CO')}</div>
+        <button class="btn-del" onclick="deleteProduct('${p.id}')">🗑️ Quitar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterList(cat, btn) {
+  currentFilter = cat;
+  renderList();
+}
+
+/* ============================================================
+   STATS
+============================================================ */
+function updateStats() {
+  document.getElementById('statTotal').textContent = PRODUCTS.length;
+  document.getElementById('statVinos').textContent = PRODUCTS.filter(p => p.cat !== 'accesorios').length;
+  document.getElementById('statAccesorios').textContent = PRODUCTS.filter(p => p.cat === 'accesorios').length;
+  document.getElementById('statPending').textContent = 0;
+  document.getElementById('prodCountBadge').textContent = PRODUCTS.length + ' productos';
+}
+
+/* ============================================================
+   UI HELPERS
+============================================================ */
+function showStatus(type, msg) {
+  const bar = document.getElementById('statusBar');
+  bar.className = 'info'; // reset
+  bar.className = type;
+  bar.innerHTML = msg;
+}
+
+function setLoading(on) {
+  const btn = document.getElementById('btnSubmit');
+  const lbl = document.getElementById('btnLabel');
+  btn.disabled = on;
+  lbl.innerHTML = on ? '<span class="spinner"></span> Procesando...' : '➕ Agregar Producto a la Tienda';
+}
+
+function setProgress(pct, label) {
+  document.getElementById('uploadProgress').style.display = 'block';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = label;
+}
+
+function resetForm() {
+  document.getElementById('fProdName').value = '';
+  document.getElementById('fPrice').value = '';
+  document.getElementById('fOldPrice').value = '';
+  document.getElementById('fBadge').value = '';
+  document.getElementById('fOrigin').value = '';
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fPairing').value = '';
+  document.getElementById('imgFile').value = '';
+  document.getElementById('imgPreview').style.display = 'none';
+  imgBase64 = null;
+  imgFileName = null;
+}
+
+/* ============================================================
+   COMPARTIR
+============================================================ */
+function copyLink() {
+  navigator.clipboard.writeText(CONFIG.storeURL).then(() => {
+    showStatus('success', '📋 ¡Link copiado al portapapeles!');
+  });
+}
+
+function shareWA() {
+  const msg = `🍷 *Paohil Vinería Artesanal* — Los mejores vinos artesanales y accesorios para tu mesa. Envíos a toda Colombia.\n\n👉 ${CONFIG.storeURL}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+/* ============================================================
+   INICIALIZAR
+============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('pwdInput').focus();
+});
+</script>
+</body>
+</html>
